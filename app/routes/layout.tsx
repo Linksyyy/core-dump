@@ -1,6 +1,7 @@
 import { Outlet, useNavigate } from "react-router";
 import type { Route } from "./+types/layout";
 import Header from "~/Components/Header";
+import Sidebar from "~/Components/Sidebar";
 
 export const meta = ({}: Route.MetaArgs) => [{ title: "Core dump" }];
 
@@ -8,91 +9,15 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed inset-0 overflow-y-auto">
-      <Header/>
-      <div className="mt-10">layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <div>layout</div>
-      <Outlet/>
+    <div className="fixed inset-0">
+      <Header />
+      <div className="flex justify-between h-screen">
+        <main className="flex-1 overflow-y-auto">
+          <div className="h-14 shrink-0" /> 
+          <Outlet />
+        </main>
+        <Sidebar />
+      </div>
     </div>
   );
 }

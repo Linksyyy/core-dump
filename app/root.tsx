@@ -27,7 +27,7 @@ export default function App() {
 export function ErrorBoundary() {
   return (
     <div className="flex fixed inset-0 items-center justify-center">
-      This route doesnt exists
+      <h1 className="text-4xl font-extrabold">404</h1> This route doesnt exists
     </div>
   );
 }
