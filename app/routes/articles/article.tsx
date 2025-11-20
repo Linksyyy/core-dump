@@ -1,5 +1,5 @@
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/article";
 
 export default function Article({ params }: Route.LoaderArgs) {
-  return <div>{params.articleID}</div>;
+  return <div>{JSON.stringify(params)}</div>;
 }

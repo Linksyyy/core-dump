@@ -1,10 +1,4 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
 import "./app.css";
 
@@ -27,9 +21,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet/>
+  return <Outlet />;
 }
 
 export function ErrorBoundary() {
-  return <div className="flex fixed inset-0 items-center justify-center">This route doesnt exists</div>
+  return (
+    <div className="flex fixed inset-0 items-center justify-center">
+      This route doesnt exists
+    </div>
+  );
 }
