@@ -4,9 +4,21 @@ import { marked } from "marked";
 export const meta = ({}: Route.MetaArgs) => [{ title: "Core dump" }];
 
 const bah = `# Lorem Ipsum
-Dolor sit amet, consectetur adipiscing elit. Cras porta tellus maximus magna fermentum, quis cursus est blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dignissim diam ac ante vulputate egestas. Curabitur sit amet libero vel nulla auctor interdum ut non velit. Nullam ullamcorper malesuada dui, non volutpat metus sodales nec. Nulla metus ante, tempor eget arcu a, congue condimentum quam. Nullam aliquam tempor efficitur. In vitae diam eget arcu tincidunt egestas quis sed dui. Aliquam interdum hendrerit quam, vitae condimentum ante pharetra vitae. Aliquam ante nisl, congue ut pellentesque eu, fringilla ac diam. Cras vitae justo orci. Donec ornare eleifend nisi, sit amet mattis odio.
 
+
+---
+Dolor sit amet, consectetur adipiscing elit. Cras porta tellus maximus magna fermentum, quis cursus est blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dignissim diam ac ante vulputate egestas. Curabitur sit amet libero vel nulla auctor interdum ut non velit. Nullam ullamcorper malesuada dui, non volutpat metus sodales nec. Nulla metus ante, tempor eget arcu a, congue condimentum quam. Nullam aliquam tempor efficitur. In vitae diam eget arcu tincidunt egestas quis sed dui. Aliquam interdum hendrerit quam, vitae condimentum ante pharetra vitae. Aliquam ante nisl, congue ut pellentesque eu, fringilla ac diam. Cras vitae justo orci. Donec ornare eleifend nisi, sit amet mattis odio.
+![sla](../../../public/favicon.ico)
 Praesent vel aliquet ex. Pellentesque congue lorem a mattis ultricies. Donec fermentum dui diam, eu sagittis leo venenatis eget. Praesent purus leo, laoreet a ornare eu, venenatis sit amet diam. Nullam in consectetur lectus, et ullamcorper tortor. Pellentesque libero risus, scelerisque non porta sed, luctus at diam. Mauris mollis et arcu vitae tempus. Suspendisse porttitor elementum leo, id ornare tellus. Nam gravida nisi purus, id facilisis elit accumsan et. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut eros tellus, porttitor scelerisque elit sed, posuere condimentum lorem. Aliquam quam libero, venenatis congue elit vel, euismod porta elit. Duis nec egestas justo, eget auctor justo. Mauris imperdiet est nec dapibus fermentum. Suspendisse cursus mattis orci nec accumsan. Morbi venenatis tellus nec porta viverra.
+
+\`\`\` c++
+#include <iostream>
+
+int main() {
+  std::cout<< "teste" << std::endl;
+  return 0;
+}
+\`\`\`
 
 Maecenas elit mi, mattis vel rutrum sed, finibus a orci. Nam et odio dolor. Duis vitae posuere odio, eget tristique mauris. In hac habitasse platea dictumst. Pellentesque sollicitudin odio vel ex pulvinar, a dignissim turpis euismod. Donec rhoncus suscipit lacinia. Vivamus commodo viverra nunc, eget porta tellus tempor at. In quis consequat libero, gravida porta felis. Donec aliquet lobortis ligula ut pretium. Ut ultrices libero rutrum felis convallis, sed facilisis dolor faucibus.
 
@@ -20,7 +32,7 @@ Donec suscipit dolor et fermentum interdum. Fusce ac leo dui. Aenean dapibus pos
 
 export default function Article({ params }: Route.LoaderArgs) {
   return (
-    <div className="Article overflow-y-auto w-full px-50 text-justify space-y-5">
+    <div className="Article overflow-y-auto w-full px-50 text-justify">
       <div
         dangerouslySetInnerHTML={{
           __html: marked.parse(bah),

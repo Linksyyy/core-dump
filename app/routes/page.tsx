@@ -1,3 +1,3 @@
 export default function Page() {
-    return <div>layout</div>
+    return <div className="overflow-y-auto w-full px-50 text-justify">layout</div>
 }

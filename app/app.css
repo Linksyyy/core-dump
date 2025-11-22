@@ -27,7 +27,7 @@
   @apply text-base leading-relaxed mb-4;
 }
 .Article a {
-  @apply text-blue-500 hover:underline;
+  @apply text-blue-500 hover:underline hover:text-blue-800;
 }
 .Article ul, .Article ol {
   @apply list-inside mb-4 pl-4;
@@ -54,7 +54,7 @@
   @apply bg-transparent p-0 rounded-none;
 }
 .Article img {
-  @apply max-w-full h-auto rounded-lg my-4;
+  @apply max-w-2/5 h-auto rounded-lg my-4;
 }
 .Article table {
   @apply w-full border-collapse border border-neutral-300 my-4;
