@@ -16,10 +16,7 @@ export default function Home() {
           <div className="h-14 shrink-0" />
           <Outlet />
         </main>
-        <section className="w-1/5 flex flex-col overflow-y-auto">
-          <div className="h-8 shrink-0" />
-          <Sidebar />
-        </section>
+        <Sidebar />
       </div>
     </div>
   );
