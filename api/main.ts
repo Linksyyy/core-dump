@@ -9,17 +9,18 @@ new Elysia()
   .get("/articles", async () => {
     const articles = await db.getArticles();
 
-    return articles.map((article) => { // just to remove internal id
+    return articles.map((article) => {
+      // just to remove internal id
       const { id, ...leftover } = article;
       return leftover;
     });
   })
   .get("/articles/:slug", async ({ status, params: { slug } }) => {
-    const result = await db.getArticleBySlug(slug);
+    const { id, ...leftover } = await db.getArticleBySlug(slug);
 
-    if (result === undefined) return status(404, { result: "Not Found" });
+    if (leftover === undefined) return status(404, { result: "Not Found" });
 
-    return { result };
+    return leftover;
   })
   .listen(PORT);
 

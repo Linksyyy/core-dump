@@ -1,18 +1,12 @@
 import { useNavigate } from "react-router";
-
-const date = new Date();
-let articles: { title: string; desc: string; date: string; slug: string }[] = [];
-for (let i = 1; i <= 100; i++) {
-  articles.push({
-    title: "blah blah " + i,
-    desc: "tal e tal e tal e tal e tal",
-    date: date.toLocaleDateString("pt-BR"),
-    slug: "lorem-ipsum",
-  });
-}
+import type { Route } from "../+types/root";
+import useArticles from "~/globalContext";
+import Article from "~/routes/article";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const { articles } = useArticles();
+
   return (
     <div className="flex flex-col w-1/5 h-full overflow-y-auto border-l border-neutral-300 px-5 pt-14 ">
       {articles.map((article, index) => (
@@ -23,9 +17,11 @@ export default function Sidebar() {
         >
           <div className="flex w-full justify-between">
             <h3 className="font-bold text-lg">{article.title}</h3>
-            <p className="text-neutral-600 text-xs">{article.date}</p>
+            <p className="text-neutral-600 text-xs">
+              {article.date.toLocaleDateString("pt-BR")}
+            </p>
           </div>
-          <p className="text-neutral-600 text-xs">{article.desc}</p>
+          <p className="text-neutral-600 text-xs">{article.description}</p>
         </button>
       ))}
     </div>
