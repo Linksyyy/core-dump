@@ -12,7 +12,11 @@ export default function Sidebar() {
       {articles.map((article, index) => (
         <button
           key={index}
-          onClick={() => navigate(article.date + "/" + article.slug)}
+          onClick={() =>
+            navigate(
+              article.date.toLocaleDateString("pt-BR") + "/" + article.slug
+            )
+          }
           className="border-y border-neutral-300 hover:bg-neutral-200 hover:cursor-pointer transform transition ease-out duration-200 flex flex-col items-start"
         >
           <div className="flex w-full justify-between">

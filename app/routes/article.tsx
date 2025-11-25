@@ -1,11 +1,11 @@
 import type { Route } from "./+types/article";
 import { marked } from "marked";
 
-export const meta = ({}: Route.MetaArgs) => [{ title: "Core dump" }];
+export const meta = ({params}: Route.MetaArgs) => [{ title: "Core dump" }];
 
 export async function loader({ params }: Route.LoaderArgs) {
   const apiUrl = process.env.API_URL;
-  const response = await fetch(`${apiUrl}/articles/first-slug`);
+  const response = await fetch(`${apiUrl}/articles/${params.articleSlug}`);
   const data = await response.json();
   return data;
 }
