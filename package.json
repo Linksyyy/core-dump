@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
+    "@elysiajs/jwt": "^1.4.0",
+    "@elysiajs/openapi": "^1.4.11",
     "@react-router/node": "^7.9.2",
     "@react-router/serve": "^7.9.2",
     "drizzle-orm": "^0.44.7",
