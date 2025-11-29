@@ -9,10 +9,10 @@ export default function Login({ toggleVisible }: componentProps) {
       onClick={toggleVisible}
     >
       <form
-        className="bg-white p-10 rounded-4xl border min-w-80 max-w-2/3 flex flex-col items-center gap-5"
+        className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
         onClick={(e) => e.stopPropagation()}
       >
-        <h1 className="text-2xl font-extrabold">Login</h1>
+        <h1 className="text-2xl font-extrabold">Entrar</h1>
         <div className="w-full">
           <label htmlFor="username" className="font-bold">
             Nome de usuário

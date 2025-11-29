@@ -9,10 +9,10 @@ export default function Login({ toggleVisible }: componentProps) {
       onClick={toggleVisible}
     >
       <form
-        className="bg-white p-10 rounded-4xl border min-w-80 max-w-2/3 flex flex-col items-center gap-5"
+        className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
         onClick={(e) => e.stopPropagation()}
       >
-        <h1 className="text-2xl font-extrabold">Register</h1>
+        <h1 className="text-2xl font-extrabold">Registrar-se</h1>
         <div className="w-full">
           <label htmlFor="username" className="font-bold">
             Nome de usuário
@@ -28,18 +28,18 @@ export default function Login({ toggleVisible }: componentProps) {
             Senha
           </label>
           <input
-            type="text"
+            type="password"
             placeholder="Senha..."
             className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
           />
         </div>
         <div className="w-full">
           <label htmlFor="password" className="font-bold">
-            Senha
+            Senha novamente
           </label>
           <input
-            type="text"
-            placeholder="Senha..."
+            type="password"
+            placeholder="Escreva a senha novamente..."
             className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
           />
         </div>
