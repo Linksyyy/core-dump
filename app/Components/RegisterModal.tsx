@@ -11,6 +11,7 @@ export default function Login({ toggleVisible }: componentProps) {
       <form
         className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
         onClick={(e) => e.stopPropagation()}
+        onSubmit={(e) => e.preventDefault()}
       >
         <h1 className="text-2xl font-extrabold">Registrar-se</h1>
         <div className="w-full">
@@ -44,10 +45,17 @@ export default function Login({ toggleVisible }: componentProps) {
           />
         </div>
         <div className="w-full flex justify-between">
-          <button className="bg-red-800 w-3/8 text-white rounded-4xl px-3 py-1">
+          <button
+            type="button"
+            className="bg-red-800 w-3/8 text-white rounded-4xl px-3 py-1"
+            onClick={toggleVisible}
+          >
             Cancelar
           </button>
-          <button className="bg-green-700 w-3/8 text-white rounded-4xl px-3 py-1">
+          <button
+            type="submit"
+            className="bg-green-700 w-3/8 text-white rounded-4xl px-3 py-1"
+          >
             Entrar
           </button>
         </div>
