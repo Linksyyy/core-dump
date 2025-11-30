@@ -1,17 +1,64 @@
+import { useEffect, useState } from "react";
+
 interface componentProps {
   toggleVisible: () => void;
 }
 
 export default function Login({ toggleVisible }: componentProps) {
+  const [usernameInput, setUsernameInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [password2Input, setPassword2Input] = useState("");
+  const [errorFeedback, setErrorFeedback] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => setErrorFeedback(""), 2000);
+  }, [errorFeedback]);
+
+  async function handleSubmit() {
+    if (passwordInput.length < 8 || password2Input.length < 8) {
+      setErrorFeedback("A senha deve ter mais de 8 caracteres!");
+      return;
+    }
+    if (passwordInput !== password2Input) {
+      setErrorFeedback("Ambas senhas tem que ser iguais! Tente novamente");
+      setPasswordInput("");
+      setPassword2Input("");
+      return;
+    }
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: usernameInput,
+        password: passwordInput,
+      }),
+    });
+    if ((await res.json()).message === "This user already exists")
+      setErrorFeedback("Este usuário já existe!");
+    if (res.ok) toggleVisible();
+  }
   return (
     <div
-      className="absolute inset-0 bg-neutral-900/20 z-100 flex justify-center items-center"
+      className="absolute inset-0 bg-neutral-900/20 z-100 flex flex-col justify-center items-center"
       onClick={toggleVisible}
     >
+      <div
+        className={`absolute bg-red-500 border border-neutral-500 px-5
+        py-2 rounded-4xl transform transition ease-in-out duration-100 -top-10
+        ${errorFeedback ? "translate-y-20 opacity-100" : "-translate-y-full opacity-0"}`}
+      >
+        <h4 className="text-white text-sm">{errorFeedback}</h4>
+      </div>
       <form
-        className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
+        className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-120 flex flex-col items-center gap-5"
         onClick={(e) => e.stopPropagation()}
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
       >
         <h1 className="text-2xl font-extrabold">Registrar-se</h1>
         <div className="w-full">
@@ -21,6 +68,9 @@ export default function Login({ toggleVisible }: componentProps) {
           <input
             type="text"
             placeholder="Usuário..."
+            required
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value.trim())}
             className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
           />
         </div>
@@ -31,6 +81,9 @@ export default function Login({ toggleVisible }: componentProps) {
           <input
             type="password"
             placeholder="Senha..."
+            required
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value.trim())}
             className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
           />
         </div>
@@ -40,6 +93,9 @@ export default function Login({ toggleVisible }: componentProps) {
           </label>
           <input
             type="password"
+            required
+            value={password2Input}
+            onChange={(e) => setPassword2Input(e.target.value.trim())}
             placeholder="Escreva a senha novamente..."
             className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
           />

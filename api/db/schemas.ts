@@ -22,7 +22,7 @@ export const usersTable = pgTable("users", {
   id: uuid().primaryKey(),
   username: varchar({ length: 255 }).notNull(),
   password_bcrypt: varchar({ length: 255 }).notNull(),
-  is_writer: boolean().default(false),
+  is_admin: boolean().default(false),
 });
 
 export const commentsTable = pgTable("comments", {
