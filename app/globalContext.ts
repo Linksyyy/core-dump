@@ -17,7 +17,8 @@ export type ArticleStore = {
 export type UserSessionStore = {
   isLoggedIn: boolean;
   username: string;
-  setAuthState: (username: string) => void;
+  isAdmin: boolean;
+  setAuthState: (username: string, isAdmin: boolean) => void;
 };
 
 export const useArticles = create<ArticleStore>((set, get) => ({
@@ -28,6 +29,7 @@ export const useArticles = create<ArticleStore>((set, get) => ({
 export const useUserSession = create<UserSessionStore>((set) => ({
   isLoggedIn: false,
   username: "",
-  setAuthState: (username: string) =>
-    set(() => ({ isLoggedIn: true, username: username })),
+  isAdmin: false,
+  setAuthState: (username: string, isAdmin: boolean) =>
+    set(() => ({ isLoggedIn: true, username, isAdmin })),
 }));

@@ -6,6 +6,7 @@ import { useArticles, useUserSession, type Article } from "~/globalContext";
 import { useEffect, useState } from "react";
 import Login from "~/Components/LoginModal";
 import Register from "~/Components/RegisterModal";
+import CreateArticle from "~/Components/CreateArticle";
 
 const API_URL = process.env.API_URL!;
 
@@ -35,9 +36,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   async function handleLogin() {
     const res = await fetch("/api/auth");
-    const digested = await res.json();
+    const { username, isAdmin } = await res.json();
 
-    if (res.ok) userSession.setAuthState(digested.username);
+    if (res.ok) userSession.setAuthState(username, isAdmin);
   }
 
   useEffect(() => {
@@ -62,6 +63,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
           <Outlet />
         </main>
+        {userSession.isAdmin && (
+          <div className=" flex relative w-fit h-full">
+            <CreateArticle />
+          </div>
+        )}
         <Sidebar />
       </div>
     </div>

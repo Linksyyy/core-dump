@@ -35,9 +35,11 @@ new Elysia()
     return leftover;
   })
   .get("/auth", async ({ jwt, status, cookie: { auth } }) => {
-    const jwtResult = await jwt.verify(auth.value as string);
+    const { username, isAdmin } = (await jwt.verify(
+      auth.value as string
+    )) as any;
 
-    if (jwtResult) return { username: jwtResult.username };
+    if (username) return { username, isAdmin };
     else return status(406, { message: "Invalid token" });
   })
   .post("/auth/signin", async ({ jwt, status, body, cookie: { auth } }) => {
@@ -59,8 +61,8 @@ new Elysia()
     if (!(await bcrypt.compare(password, user.password_bcrypt))) {
       return status(401, { message: "Wrong password" });
     }
-
-    const value = await jwt.sign({ username });
+    const payload = { username, isAdmin: user.is_admin };
+    const value = await jwt.sign(payload);
 
     auth.set({
       value,
@@ -69,7 +71,7 @@ new Elysia()
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,
     });
-    return { username };
+    return payload;
   })
   .post("/auth/signup", async ({ status, body, cookie: { auth } }) => {
     let { username = "", password = "" } = body as any;

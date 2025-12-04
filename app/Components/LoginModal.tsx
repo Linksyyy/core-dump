@@ -30,15 +30,15 @@ export default function Login({ toggleVisible }: componentProps) {
         password: passwordInput,
       }),
     });
-    const body = await res.json();
-    if (body.message === "Wrong password") {
+    const { username, isAdmin, message } = await res.json();
+    if (message === "Wrong password") {
       setErrorFeedback("Senha incorreta");
       setPasswordInput("");
     }
     if (res.ok) {
       setConfirmFeedback("Login foi um sucesso!");
       setTimeout(() => toggleVisible(), 500);
-      userSession.setAuthState(body.username);
+      userSession.setAuthState(username, isAdmin);
     }
   }
 
