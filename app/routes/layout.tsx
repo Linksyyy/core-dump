@@ -59,9 +59,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       />
       <div className="flex justify-between h-screen">
         <main className="flex-1 overflow-y-auto">
-          <div className="h-14 shrink-0" />
-
-          <Outlet />
+          <div className="h-14 shrink-0 " />
+          <div className="px-10 md:px-30 xl:px-50">
+            <Outlet />
+          </div>
         </main>
         {userSession.isAdmin && (
           <div className=" flex relative w-fit h-full">
