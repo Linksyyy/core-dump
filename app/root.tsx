@@ -1,4 +1,11 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import {
+  Link,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from "react-router";
 
 import "./app.css";
 
@@ -26,8 +33,13 @@ export default function App() {
 
 export function ErrorBoundary() {
   return (
-    <div className="flex fixed inset-0 items-center justify-center">
-      <h1 className="text-4xl font-extrabold">404</h1> This route doesnt exists
+    <div className="flex fixed inset-0 items-center justify-center flex-col">
+      <h1 className="text-4xl font-extrabold">404</h1> Rota não encontrada
+      <Link to="/">
+        <button className="bg-black text-sm text-white px-3 py-1 rounded-full mt-5 cursor-pointer hover:bg-neutral-700 hover:border border border-black">
+          Retornar para página principal
+        </button>
+      </Link>
     </div>
   );
 }
