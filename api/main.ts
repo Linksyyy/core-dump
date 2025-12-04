@@ -34,6 +34,12 @@ new Elysia()
 
     return leftover;
   })
+  .get("/auth", async ({ jwt, status, cookie: { auth } }) => {
+    const jwtResult = await jwt.verify(auth.value as string);
+
+    if (jwtResult) return { username: jwtResult.username };
+    else return status(406, { message: "Invalid token" });
+  })
   .post("/auth/signin", async ({ jwt, status, body, cookie: { auth } }) => {
     let { username, password } = body as any;
     [username, password] = [username.trim(), password.trim()];
@@ -54,7 +60,7 @@ new Elysia()
       return status(401, { message: "Wrong password" });
     }
 
-    const value = await jwt.sign({ username, password });
+    const value = await jwt.sign({ username });
 
     auth.set({
       value,
@@ -63,7 +69,7 @@ new Elysia()
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,
     });
-    return { message: `Logged as ${username}` };
+    return { username };
   })
   .post("/auth/signup", async ({ status, body, cookie: { auth } }) => {
     let { username = "", password = "" } = body as any;

@@ -14,7 +14,20 @@ export type ArticleStore = {
   setArticles: (articlesInput: Article[]) => void;
 };
 
-export default create<ArticleStore>((set, get) => ({
+export type UserSessionStore = {
+  isLoggedIn: boolean;
+  username: string;
+  setAuthState: (username: string) => void;
+};
+
+export const useArticles = create<ArticleStore>((set, get) => ({
   articles: [],
   setArticles: (articlesInput) => set(() => ({ articles: articlesInput })),
+}));
+
+export const useUserSession = create<UserSessionStore>((set) => ({
+  isLoggedIn: false,
+  username: "",
+  setAuthState: (username: string) =>
+    set(() => ({ isLoggedIn: true, username: username })),
 }));

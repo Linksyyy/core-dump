@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import type { Route } from "../+types/root";
-import useArticles from "~/globalContext";
+import { useArticles } from "~/globalContext";
 import Article from "~/routes/article";
 
 export default function Sidebar() {

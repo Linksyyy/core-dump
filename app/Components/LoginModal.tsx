@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUserSession } from "~/globalContext";
 
 interface componentProps {
   toggleVisible: () => void;
@@ -8,6 +9,15 @@ export default function Login({ toggleVisible }: componentProps) {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [errorFeedback, setErrorFeedback] = useState("");
+  const [confirmFeedback, setConfirmFeedback] = useState("");
+  const userSession = useUserSession();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorFeedback("");
+      setConfirmFeedback("");
+    }, 500);
+  }, [errorFeedback]);
 
   async function handleSubmit() {
     const res = await fetch("/api/auth/signin", {
@@ -20,10 +30,15 @@ export default function Login({ toggleVisible }: componentProps) {
         password: passwordInput,
       }),
     });
-    if (res.ok) toggleVisible();
-    if ((await res.json()).message === "Wrong password") {
+    const body = await res.json();
+    if (body.message === "Wrong password") {
       setErrorFeedback("Senha incorreta");
       setPasswordInput("");
+    }
+    if (res.ok) {
+      setConfirmFeedback("Login foi um sucesso!");
+      setTimeout(() => toggleVisible(), 500);
+      userSession.setAuthState(body.username);
     }
   }
 
@@ -38,6 +53,13 @@ export default function Login({ toggleVisible }: componentProps) {
         ${errorFeedback ? "translate-y-20 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <h4 className="text-white text-sm">{errorFeedback}</h4>
+      </div>
+      <div
+        className={`absolute bg-green-500 border border-neutral-500 px-5
+        py-2 rounded-4xl transform transition ease-in-out duration-100 -top-10
+        ${confirmFeedback ? "translate-y-20 opacity-100" : "-translate-y-full opacity-0"}`}
+      >
+        <h4 className="text-white text-sm">{confirmFeedback}</h4>
       </div>
       <form
         className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
