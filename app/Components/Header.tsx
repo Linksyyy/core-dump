@@ -37,18 +37,21 @@ export default function Header({
           <Link to="/">Core dump</Link>
         </h1>
       </div>
-      <div className="w-5/8 flex items-center justify-center gap-2">
-        <Link
-          to="/about"
-          className="text-neutral-500 w-full truncate flex justify-end hover:bg-white/80 hover:underline bg-white/50 py-1 px-2 backdrop-blur-xs rounded-4xl"
-        >
-          about me
-        </Link>
-        <div className="focus-within:bg-neutral-100 bg-neutral-300 max-w-200 w-3/5 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 justify-between">
-          <FaSearch className="size-5 h-full" />
-          <input type="text" ref={inputRef} className="outline-none w-6/10" />
-          <div className="w-fit h-fit">
-            <p className="truncate">Ctrl + K</p>
+      <div className="w-2/6"></div>
+      <div className="w-5/8 flex items-center justify-between gap-2">
+        <div className="flex gap-20 w-full">
+          <Link
+            to="/about"
+            className="text-neutral-500 truncate flex justify-center hover:bg-white/80 hover:underline bg-white/50 py-1 px-6 backdrop-blur-xs rounded-full"
+          >
+            about me
+          </Link>
+          <div className="focus-within:bg-neutral-100 bg-neutral-300 max-w-200 w-full h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 justify-between">
+            <FaSearch className="size-5 h-full" />
+            <input type="text" ref={inputRef} className="outline-none w-7/10" />
+            <div className="w-fit h-fit">
+              <p className="truncate">Ctrl + K</p>
+            </div>
           </div>
         </div>
         <div className="flex mx-5">

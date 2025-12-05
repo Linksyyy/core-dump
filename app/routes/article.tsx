@@ -9,8 +9,9 @@ export default function Article({ params, loaderData }: Route.ComponentProps) {
   const { articles } = useArticles();
   const article = articles.find((el) => el.slug === params.articleSlug);
   return (
-    <div className="Article overflow-y-auto w-full text-justify">
+    <div className="px-8 flex md:px-15 xl:px-20">
       <div
+        className="Article h-full w-full justify-between overflow-x-hidden wrap-break-word text-justify hyphens-auto"
         dangerouslySetInnerHTML={{
           __html: marked.parse(article?.content ?? ""),
         }}
