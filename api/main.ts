@@ -1,6 +1,6 @@
-import { Elysia, status } from "elysia";
+import { Elysia, status, t } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { jwt } from "@elysiajs/jwt";
+import { jwt, type JWTPayloadSpec } from "@elysiajs/jwt";
 import { openapi } from "@elysiajs/openapi";
 import * as db from "./db/queries";
 import bcrypt from "bcrypt";
@@ -18,15 +18,70 @@ new Elysia()
     })
   )
   .use(openapi())
-  .use(jwt({ name: "jwt", secret: process.env.JWT_SECRET_STRING!, exp: "30d" }))
+  .use(
+    jwt({
+      name: "jwt",
+      secret: process.env.JWT_SECRET_STRING!,
+      exp: "30d",
+      schema: t.Object({
+        id: t.String(),
+        username: t.String(),
+        isAdmin: t.Boolean(),
+      }),
+    })
+  )
   .get("/articles", async () => {
     const articles = await db.getArticles();
 
     return articles.map((article) => {
       const { id, ...leftover } = article;
-      return leftover;
+      return { ...leftover, date: new Date(leftover.date) };
     });
   })
+  .post(
+    "/articles",
+    async ({ jwt, cookie: { auth }, status, body }) => {
+      const jwtPayload = await jwt.verify(auth.value as string);
+
+      let { title, description, content } = body;
+      [title, description, content] = [
+        title.trim(),
+        description.trim(),
+        content.trim(),
+      ];
+
+      if (!jwtPayload) return status(400, { message: "Need to be logged in" });
+      if (!jwtPayload.isAdmin)
+        return status(401, { message: "Need to be admin to send an article" });
+      if (!title || !description || !content)
+        return status(400, {
+          message:
+            "Parameters 'title', 'description' and 'content' must be defined",
+        });
+
+      try {
+        const date = new Date();
+        const article = await db.createArticle(
+          title,
+          description,
+          content,
+          date,
+          jwtPayload.id
+        );
+        const { id, ...leftover } = article;
+        return { article: { ...leftover, date: new Date(article.date) } };
+      } catch (e) {
+        return status(500, { message: "Something is wrong here" });
+      }
+    },
+    {
+      body: t.Object({
+        title: t.String(),
+        description: t.String(),
+        content: t.String(),
+      }),
+    }
+  )
   .get("/articles/:slug", async ({ status, params: { slug } }) => {
     const { id, ...leftover } = await db.getArticleBySlug(slug);
 
@@ -61,7 +116,7 @@ new Elysia()
     if (!(await bcrypt.compare(password, user.password_bcrypt))) {
       return status(401, { message: "Wrong password" });
     }
-    const payload = { username, isAdmin: user.is_admin };
+    const payload = { id: user.id, username, isAdmin: user.is_admin! };
     const value = await jwt.sign(payload);
 
     auth.set({

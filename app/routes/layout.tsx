@@ -27,12 +27,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const articles = useArticles();
   const userSession = useUserSession();
 
-  const formatedArticles = (articlesResponse as Article[]).map(
-    (article: Article) => ({
-      ...article,
-      date: new Date(article.date),
-    })
-  );
 
   async function handleLogin() {
     const res = await fetch("/api/auth");
@@ -42,7 +36,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }
 
   useEffect(() => {
-    articles.setArticles(formatedArticles);
+    articles.setArticles(articlesResponse);
     handleLogin();
   }, []);
 

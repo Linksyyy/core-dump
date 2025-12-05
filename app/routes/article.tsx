@@ -1,11 +1,10 @@
-import { useEffect } from "react";
 import type { Route } from "./+types/article";
 import { marked } from "marked";
 import { useArticles, type Article } from "~/globalContext";
 
-export const meta = ({ params }: Route.MetaArgs) => [{ title: "Core Dump" }];
+export const meta = ({ params }: Route.MetaArgs) => [{ title: params.articleSlug }];
 
-export default function Article({ params, loaderData }: Route.ComponentProps) {
+export default function Article({ params }: Route.ComponentProps) {
   const { articles } = useArticles();
   const article = articles.find((el) => el.slug === params.articleSlug);
   return (

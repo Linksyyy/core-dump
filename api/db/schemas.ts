@@ -15,7 +15,7 @@ export const articlesTable = pgTable("articles", {
   slug: varchar({ length: 255 }).unique().notNull(),
   content: text().notNull(),
   date: timestamp().notNull(),
-  author: uuid().references(() => usersTable.id, { onDelete: "set null" }),
+  authorId: uuid().references(() => usersTable.id, { onDelete: "set null" }),
 });
 
 export const usersTable = pgTable("users", {
