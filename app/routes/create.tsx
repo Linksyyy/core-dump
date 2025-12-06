@@ -55,36 +55,40 @@ export default function Create() {
       }}
       className="flex flex-col gap-y-10 w-full"
     >
+      <hr className="text-neutral-400 mt-5" />
       <div className="w-full h-full grid grid-cols-2 gap-4">
         <textarea
           placeholder="Escreva aqui..."
+          required
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="h-full justify-between outline-none border border-dashed border-neutral-500 wrap-break-word p-4"
         />
         <div
-          className="Article h-full w-full justify-between overflow-x-hidden wrap-break-word text-justify hyphens-auto p-4"
+          className="Article h-full w-full justify-between overflow-x-hidden p-4"
           dangerouslySetInnerHTML={{
             __html: marked.parse(content ?? ""),
           }}
         ></div>
       </div>
-      <hr className="text-neutral-400" />
-      <div className="w-full bg-neutral-300 mb-10 h-20 rounded-3xl p-3 flex items-center justify-between gap-5">
+      <hr className="text-neutral-400 mb-50" />
+      <div className="absolute bottom-0 w-6/10 border border-neutral-400 bg-neutral-300/50 backdrop-blur-sm mb-10 h-20 rounded-3xl p-3 flex items-center justify-between gap-5 mx-10">
         <div className="flex w-full gap-10">
           <input
             type="text"
+            required
             placeholder="Insira o título"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-neutral-200 px-3 py-1 rounded-3xl outline-none"
+            className="bg-neutral-300/30 px-3 py-1 rounded-3xl outline-none border border-neutral-500 focus:border-black focus:bg-neutral-400/30"
           />
           <input
             type="text"
+            required
             placeholder="Insira a descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="bg-neutral-200 px-3 py-1 rounded-3xl outline-none"
+            className="bg-neutral-300/30 px-3 py-1 rounded-3xl outline-none border border-neutral-500 focus:border-black focus:bg-neutral-400/30"
           />
         </div>
         <div className="flex gap-10 w-full justify-end">
@@ -103,13 +107,13 @@ export default function Create() {
               setContent("");
             }}
             type="reset"
-            className="flex justify-center items-center bg-red-500 rounded-full border hover:bg-red-700 cursor-pointer"
+            className="flex justify-center items-center bg-red-500/60 rounded-full border hover:bg-red-700/90 focus:bg-red-700/90 cursor-pointer"
           >
             <FaRegTrashCan className="size-11 p-3" />
           </button>
           <button
             type="submit"
-            className="flex justify-center items-center bg-green-500 rounded-full border hover:bg-green-700 cursor-pointer"
+            className="flex justify-center items-center bg-green-500/60 rounded-full border hover:bg-green-700/90 focus:bg-green-700/90 cursor-pointer"
           >
             <MdOutlineDone className="size-11 p-3" />
           </button>

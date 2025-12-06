@@ -12,7 +12,7 @@ export default function Article({ params }: Route.ComponentProps) {
   return (
     <div className="px-8 flex md:px-15 xl:px-20">
       <div
-        className="Article h-full w-full justify-between overflow-x-hidden wrap-break-word text-justify hyphens-auto"
+        className="Article h-full w-full justify-between overflow-x-hidden"
         dangerouslySetInnerHTML={{
           __html: marked.parse(article?.content ?? ""),
         }}

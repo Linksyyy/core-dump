@@ -27,7 +27,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const articles = useArticles();
   const userSession = useUserSession();
 
-
   async function handleLogin() {
     const res = await fetch("/api/auth");
     const { username, isAdmin } = await res.json();
