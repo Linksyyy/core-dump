@@ -2,7 +2,9 @@ import type { Route } from "./+types/article";
 import { marked } from "marked";
 import { useArticles, type Article } from "~/globalContext";
 
-export const meta = ({ params }: Route.MetaArgs) => [{ title: params.articleSlug }];
+export const meta = ({ params }: Route.MetaArgs) => [
+  { title: params.articleSlug.replace("-", " ") },
+];
 
 export default function Article({ params }: Route.ComponentProps) {
   const { articles } = useArticles();

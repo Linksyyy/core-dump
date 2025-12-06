@@ -14,7 +14,7 @@ export async function getArticleBySlug(slug: string) {
 }
 
 export async function getArticles() {
-  const articles = await db.select().from(schemas.articlesTable);
+  const articles = await db.select().from(schemas.articlesTable).orderBy(schemas.articlesTable.date);
   return articles;
 }
 
