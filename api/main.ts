@@ -35,7 +35,7 @@ new Elysia()
 
     return articles.map((article) => {
       const { id, ...leftover } = article;
-      return { ...leftover, date: new Date(leftover.date) };
+      return leftover;
     });
   })
   .post(
@@ -69,7 +69,7 @@ new Elysia()
           jwtPayload.id
         );
         const { id, ...leftover } = article;
-        return { article: { ...leftover, date: new Date(article.date) } };
+        return { article: leftover };
       } catch (e) {
         return status(500, { message: "Something is wrong here" });
       }
