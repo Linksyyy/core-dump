@@ -4,6 +4,7 @@ import { marked } from "marked";
 import { MdOutlineDone } from "react-icons/md";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useArticles } from "~/globalContext";
+import MathJaxContent from "~/Components/MathJaxContent";
 
 const API_URL = process.env.API_URL;
 
@@ -64,12 +65,10 @@ export default function Create() {
           onChange={(e) => setContent(e.target.value)}
           className="h-full justify-between outline-none border border-dashed border-neutral-500 wrap-break-word p-4"
         />
-        <div
+        <MathJaxContent
           className="Article h-full w-full justify-between overflow-x-hidden p-4"
-          dangerouslySetInnerHTML={{
-            __html: marked.parse(content ?? ""),
-          }}
-        ></div>
+          html={marked.parse(content ?? "", { async: false })}
+        />
       </div>
       <hr className="text-neutral-400 mb-50" />
       <div className="absolute bottom-0 w-6/10 border border-neutral-400 bg-neutral-300/50 backdrop-blur-sm mb-10 h-20 rounded-3xl p-3 flex items-center justify-between gap-5 mx-10">
