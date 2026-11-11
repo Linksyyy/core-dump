@@ -42,7 +42,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="fixed inset-0 bg-void text-ivory">
-      <GalaxyBackdrop />
+      {/* <GalaxyBackdrop /> */}
       {loginVisible && <Login toggleVisible={() => setLoginVisible(false)} />}
       {registerVisible && (
         <Register toggleVisible={() => setRegisterVisible(false)} />

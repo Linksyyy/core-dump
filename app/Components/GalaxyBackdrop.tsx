@@ -50,7 +50,7 @@ export default function StarAsciibackdrop() {
   return (
     <pre
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 flex scale-100 select-none items-center justify-center overflow-hidden whitespace-pre font-mono leading-4 text-scarlet/20"
+      className="pointer-events-none fixed inset-0 z-0 flex scale-100 select-none items-center justify-center overflow-hidden whitespace-pre font-mono leading-4 text-scarlet/15"
     >
       {galaxyAscii}
     </pre>

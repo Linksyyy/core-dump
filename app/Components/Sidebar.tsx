@@ -37,9 +37,9 @@ export default function Sidebar() {
                       article.slug,
                   )
                 }
-                className={`group relative font-serif border-border hover:bg-gradient-to-r hover:from-scarlet/20 hover:to-transparent hover:cursor-pointer transform transition ease-out duration-200 flex flex-col items-start w-full py-3 ${
+                className={`group relative font-serif border-border hover:bg-linear-to-r hover:from-scarlet/20 hover:to-transparent hover:cursor-pointer transform transition ease-out duration-200 flex flex-col items-start w-full py-3 ${
                   isSelected
-                    ? "bg-gradient-to-r from-scarlet/20 to-transparent"
+                    ? "bg-linear-to-r from-scarlet/20 to-transparent"
                     : ""
                 }`}
               >
