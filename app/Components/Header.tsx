@@ -31,9 +31,9 @@ export default function Header({
   }, []);
 
   return (
-    <div className="fixed flex w-full bg-white/10 backdrop-blur-sm justify-between items-center space-x-2 border-b border-neutral-300 max-h-15">
+    <div className="fixed z-10 flex w-full justify-between items-center space-x-2 border-b border-slate-300 bg-slate-100/90 shadow-sm backdrop-blur-sm max-h-15">
       <div className="w-3/8 flex items-center">
-        <h1 className="text-3xl font-extrabold justify-evenly ml-20 items-center my-1">
+        <h1 className="font-serif text-3xl font-bold tracking-[-0.06em] justify-evenly ml-8 md:ml-16 items-center my-2">
           <Link to="/">Core dump</Link>
         </h1>
       </div>
@@ -42,11 +42,11 @@ export default function Header({
         <div className="flex gap-20 w-full">
           <Link
             to="/about"
-            className="text-neutral-500 truncate flex justify-center hover:bg-white/80 hover:underline bg-white/50 py-1 px-6 backdrop-blur-xs rounded-full"
+            className="text-neutral-600 truncate flex justify-center hover:text-black hover:underline py-1 px-4"
           >
             about me
           </Link>
-          <div className="focus-within:bg-neutral-100 bg-neutral-300 max-w-200 w-full h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 justify-between">
+          <div className="focus-within:bg-white bg-slate-200/70 max-w-200 w-full h-8 border border-slate-300 px-4 py-0.5 rounded-4xl flex items-center gap-2 justify-between">
             <FaSearch className="size-5 h-full" />
             <input type="text" ref={inputRef} className="outline-none w-7/10" />
             <div className="w-fit h-fit">
@@ -58,13 +58,13 @@ export default function Header({
           {!userSession.isLoggedIn ? (
             <>
               <button
-                className="text-neutral-500 hover:cursor-pointer w-full truncate flex justify-end hover:bg-white/80 hover:underline bg-white/50 py-1 px-2 backdrop-blur-xs rounded-4xl text-clip"
+                className="text-neutral-600 hover:cursor-pointer w-full truncate flex justify-end hover:text-black hover:underline py-1 px-2 text-clip"
                 onClick={onLoginClick}
               >
                 Sign in
               </button>
               <button
-                className="text-neutral-500 hover:cursor-pointer w-full truncate flex justify-start hover:bg-white/80 hover:underline bg-white/50 py-1 px-2 backdrop-blur-xs rounded-4xl"
+                className="text-neutral-600 hover:cursor-pointer w-full truncate flex justify-start hover:text-black hover:underline py-1 px-2"
                 onClick={onRegisterClick}
               >
                 Sign up
