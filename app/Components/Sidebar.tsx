@@ -1,20 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 import { useArticles } from "~/globalContext";
-
-const months = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
+import OwlBackdrop from "./OwlBackdrop";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -23,11 +9,11 @@ export default function Sidebar() {
   const orderedArticles = [...articles].reverse();
 
   return (
-    <aside className="flex flex-col w-1/5 h-full overflow-y-auto border-l border-border bg-charcoal/70 pt-20">
-      <h2 className="font-serif text-ivory tracking-wide mb-5 text-lg">
+    <aside className="relative flex flex-col w-1/5 h-full overflow-hidden border-l border-border bg-charcoal/70 pt-20">
+      <h2 className="font-serif text-ivory flex items-center justify-center tracking-wide mb-5 text-xl font-bold leading-0">
         Archive
       </h2>
-      <div>
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {orderedArticles.map((article, index) => {
           const previousYear =
             index > 0
@@ -52,7 +38,9 @@ export default function Sidebar() {
                   )
                 }
                 className={`group relative font-serif border-border hover:bg-gradient-to-r hover:from-scarlet/20 hover:to-transparent hover:cursor-pointer transform transition ease-out duration-200 flex flex-col items-start w-full py-3 ${
-                  isSelected ? "bg-gradient-to-r from-scarlet/20 to-transparent" : ""
+                  isSelected
+                    ? "bg-gradient-to-r from-scarlet/20 to-transparent"
+                    : ""
                 }`}
               >
                 <div
@@ -82,6 +70,7 @@ export default function Sidebar() {
           );
         })}
       </div>
+      <OwlBackdrop />
     </aside>
   );
 }

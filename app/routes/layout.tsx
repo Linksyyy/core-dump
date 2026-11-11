@@ -2,11 +2,12 @@ import { Outlet } from "react-router";
 import type { Route } from "./+types/layout";
 import Header from "~/Components/Header";
 import Sidebar from "~/Components/Sidebar";
-import { useArticles, useUserSession, type Article } from "~/globalContext";
+import { useArticles, useUserSession } from "~/globalContext";
 import { useEffect, useState } from "react";
 import Login from "~/Components/LoginModal";
 import Register from "~/Components/RegisterModal";
 import CreateArticle from "~/Components/CreateArticle";
+import GalaxyBackdrop from "~/Components/GalaxyBackdrop";
 
 const API_URL = process.env.API_URL!;
 
@@ -41,6 +42,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="fixed inset-0 bg-void text-ivory">
+      <GalaxyBackdrop />
       {loginVisible && <Login toggleVisible={() => setLoginVisible(false)} />}
       {registerVisible && (
         <Register toggleVisible={() => setRegisterVisible(false)} />
