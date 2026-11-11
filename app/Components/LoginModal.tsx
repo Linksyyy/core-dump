@@ -44,25 +44,25 @@ export default function Login({ toggleVisible }: componentProps) {
 
   return (
     <div
-      className="absolute inset-0 bg-neutral-900/20 z-100 flex justify-center items-center"
+      className="absolute inset-0 bg-void/80 z-100 flex justify-center items-center"
       onClick={toggleVisible}
     >
       <div
-        className={`absolute bg-red-500 border border-neutral-500 px-5
+        className={`absolute bg-scarlet border border-scarlet px-5
         py-2 rounded-4xl transform transition ease-in-out duration-100 -top-10
         ${errorFeedback ? "translate-y-20 opacity-100" : "-translate-y-full opacity-0"}`}
       >
-        <h4 className="text-white text-sm">{errorFeedback}</h4>
+        <h4 className="text-ivory text-sm">{errorFeedback}</h4>
       </div>
       <div
-        className={`absolute bg-green-500 border border-neutral-500 px-5
+        className={`absolute bg-acid border border-acid px-5
         py-2 rounded-4xl transform transition ease-in-out duration-100 -top-10
         ${confirmFeedback ? "translate-y-20 opacity-100" : "-translate-y-full opacity-0"}`}
       >
-        <h4 className="text-white text-sm">{confirmFeedback}</h4>
+        <h4 className="text-void text-sm">{confirmFeedback}</h4>
       </div>
       <form
-        className="bg-white p-10 rounded-4xl border border-neutral-500 min-w-80 max-w-2/3 flex flex-col items-center gap-5"
+        className="bg-charcoal text-ivory p-10 rounded-2xl border border-border min-w-80 max-w-2/3 flex flex-col items-center gap-5"
         onClick={(e) => e.stopPropagation()}
         onSubmit={(e) => {
           e.preventDefault();
@@ -80,7 +80,7 @@ export default function Login({ toggleVisible }: componentProps) {
             required
             value={usernameInput}
             onChange={(e) => setUsernameInput(e.target.value)}
-            className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
+            className="focus-within:bg-surface bg-surface text-ivory placeholder:text-muted h-8 border border-border px-5 py-0.5 rounded-lg flex items-center gap-2 outline-none w-full"
           />
         </div>
         <div className="w-full">
@@ -93,20 +93,20 @@ export default function Login({ toggleVisible }: componentProps) {
             required
             value={passwordInput}
             onChange={(e) => setPasswordInput(e.target.value)}
-            className="focus-within:bg-neutral-100 bg-neutral-300 h-8 border px-5 py-0.5 rounded-4xl flex items-center gap-2 outline-none w-full"
+            className="focus-within:bg-surface bg-surface text-ivory placeholder:text-muted h-8 border border-border px-5 py-0.5 rounded-lg flex items-center gap-2 outline-none w-full"
           />
         </div>
         <div className="w-full flex justify-between">
           <button
             type="button"
-            className="bg-red-800 w-3/8 text-white rounded-4xl px-3 py-1"
+            className="bg-scarlet w-3/8 text-ivory rounded-lg px-3 py-1"
             onClick={toggleVisible}
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="bg-green-700 w-3/8 text-white rounded-4xl px-3 py-1"
+            className="bg-acid w-3/8 text-void rounded-lg px-3 py-1"
           >
             Entrar
           </button>

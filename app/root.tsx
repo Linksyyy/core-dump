@@ -61,7 +61,7 @@ export function ErrorBoundary() {
       <h1 className="text-4xl font-extrabold">404</h1>
       Rota não encontrada
       <Link to="/">
-        <button className="bg-black text-sm text-white px-3 py-1 rounded-full mt-5 cursor-pointer hover:bg-neutral-700 hover:border border border-black">
+        <button className="bg-acid text-void text-sm px-3 py-1 rounded-lg mt-5 cursor-pointer hover:bg-acid/80 border border-acid">
           Retornar para página principal
         </button>
       </Link>

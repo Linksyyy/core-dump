@@ -56,22 +56,22 @@ export default function Create() {
       }}
       className="flex flex-col gap-y-10 w-full"
     >
-      <hr className="text-neutral-400 mt-5" />
+      <hr className="border-border mt-5" />
       <div className="w-full h-full grid grid-cols-2 gap-4">
         <textarea
           placeholder="Escreva aqui..."
           required
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="h-full justify-between outline-none border border-dashed border-neutral-500 wrap-break-word p-4"
+          className="h-full justify-between outline-none border border-dashed border-border bg-charcoal text-ivory placeholder:text-muted wrap-break-word p-4"
         />
         <MathJaxContent
           className="Article h-full w-full justify-between overflow-x-hidden p-4"
           html={marked.parse(content ?? "", { async: false })}
         />
       </div>
-      <hr className="text-neutral-400 mb-50" />
-      <div className="absolute bottom-0 w-6/10 border border-neutral-400 bg-neutral-300/50 backdrop-blur-sm mb-10 h-20 rounded-3xl p-3 flex items-center justify-between gap-5 mx-10">
+      <hr className="border-border mb-50" />
+      <div className="absolute bottom-0 w-6/10 border border-border bg-charcoal/95 backdrop-blur-sm mb-10 h-20 rounded-3xl p-3 flex items-center justify-between gap-5 mx-10">
         <div className="flex w-full gap-10">
           <input
             type="text"
@@ -79,7 +79,7 @@ export default function Create() {
             placeholder="Insira o título"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-neutral-300/30 px-3 py-1 rounded-3xl outline-none border border-neutral-500 focus:border-black focus:bg-neutral-400/30"
+            className="bg-surface px-3 py-1 rounded-3xl outline-none border border-border text-ivory placeholder:text-muted focus:border-electric focus:bg-surface"
           />
           <input
             type="text"
@@ -87,7 +87,7 @@ export default function Create() {
             placeholder="Insira a descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="bg-neutral-300/30 px-3 py-1 rounded-3xl outline-none border border-neutral-500 focus:border-black focus:bg-neutral-400/30"
+            className="bg-surface px-3 py-1 rounded-3xl outline-none border border-border text-ivory placeholder:text-muted focus:border-electric focus:bg-surface"
           />
         </div>
         <div className="flex gap-10 w-full justify-end">
@@ -106,13 +106,13 @@ export default function Create() {
               setContent("");
             }}
             type="reset"
-            className="flex justify-center items-center bg-red-500/60 rounded-full border hover:bg-red-700/90 focus:bg-red-700/90 cursor-pointer"
+            className="flex justify-center items-center bg-scarlet/60 rounded-full border border-scarlet hover:bg-scarlet/90 focus:bg-scarlet/90 cursor-pointer"
           >
             <FaRegTrashCan className="size-11 p-3" />
           </button>
           <button
             type="submit"
-            className="flex justify-center items-center bg-green-500/60 rounded-full border hover:bg-green-700/90 focus:bg-green-700/90 cursor-pointer"
+            className="flex justify-center items-center bg-acid text-void rounded-full border border-acid hover:bg-acid/80 focus:bg-acid/80 cursor-pointer"
           >
             <MdOutlineDone className="size-11 p-3" />
           </button>

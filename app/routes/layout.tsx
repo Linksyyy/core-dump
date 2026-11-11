@@ -40,7 +40,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-slate-100">
+    <div className="fixed inset-0 bg-void text-ivory">
       {loginVisible && <Login toggleVisible={() => setLoginVisible(false)} />}
       {registerVisible && (
         <Register toggleVisible={() => setRegisterVisible(false)} />

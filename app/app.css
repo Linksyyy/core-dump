@@ -1,14 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --color-void: #101014;
+  --color-charcoal: #1a1a22;
+  --color-surface: #23232c;
+  --color-border: #34343f;
+  --color-muted: #96939a;
+  --color-ivory: #f0e8d8;
+  --color-electric: #3155ff;
+  --color-scarlet: #ff304f;
+  --color-acid: #e5ff38;
+  --color-violet: #7928ca;
+}
+
 .Article {
-  @apply wrap-break-word text-justify hyphens-auto text-neutral-900;
+  @apply wrap-break-word text-justify hyphens-auto text-ivory;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.12rem;
   line-height: 1.8;
 }
 
 .Article h1 {
-  @apply mb-6;
+  @apply text-scarlet mb-6;
   font-size: clamp(2.75rem, 5vw, 4.5rem);
   font-weight: 700;
   line-height: 0.98;
@@ -54,7 +67,7 @@
 }
 
 .Article a {
-  @apply text-blue-500 hover:underline hover:text-blue-800;
+  @apply text-violet hover:underline hover:text-acid;
 }
 
 .Article ul,
@@ -75,7 +88,7 @@
 }
 
 .Article blockquote {
-  @apply border-l-4 border-neutral-300 pl-6 italic my-6 text-neutral-600;
+  @apply border-l-4 border-scarlet pl-6 italic my-6 text-muted;
 }
 
 .Article code,
@@ -86,20 +99,21 @@
 }
 
 .Article code {
-  @apply bg-neutral-200 text-neutral-900 py-0.5 px-1 rounded text-sm;
+  @apply bg-surface text-acid border border-border py-0.5 px-1 rounded text-sm;
 }
 
 .Article pre {
-  @apply bg-slate-900 text-slate-200 p-5 rounded-xl overflow-x-auto my-6 shadow-lg;
+  @apply bg-void !text-ivory border border-border p-5 rounded-xl overflow-x-auto my-6 shadow-lg;
   font-size: 0.88rem;
   line-height: 1.7;
   tab-size: 2;
 }
 
 .Article pre code {
-  @apply bg-transparent p-0 rounded-none;
+  @apply !bg-transparent !text-ivory border-0 p-0 rounded-none;
   color: inherit;
   font-size: inherit;
+  font-weight: 500;
 }
 
 .Article img {
@@ -107,20 +121,20 @@
 }
 
 .Article table {
-  @apply w-full border-collapse border border-neutral-300 my-4;
+  @apply w-full border-collapse border border-border my-4;
 }
 
 .Article th,
 .Article td {
-  @apply border border-neutral-300 p-2 text-left;
+  @apply border border-border p-2 text-left;
 }
 
 .Article th {
-  @apply bg-slate-200 font-semibold;
+  @apply bg-surface font-semibold;
 }
 
 .Article hr {
-  @apply border-neutral-300 my-10;
+  @apply border-border my-10;
 }
 
 /*
