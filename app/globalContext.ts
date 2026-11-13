@@ -12,6 +12,7 @@ export type Article = {
 export type ArticleStore = {
   articles: Article[];
   setArticles: (articlesInput: Article[]) => void;
+  upsertArticle: (article: Article) => void;
 };
 
 export type UserSessionStore = {
@@ -24,6 +25,14 @@ export type UserSessionStore = {
 export const useArticles = create<ArticleStore>((set, get) => ({
   articles: [],
   setArticles: (articlesInput) => set(() => ({ articles: articlesInput })),
+  upsertArticle: (article) =>
+    set((state) => ({
+      articles: state.articles.some((cached) => cached.slug === article.slug)
+        ? state.articles.map((cached) =>
+            cached.slug === article.slug ? article : cached,
+          )
+        : [...state.articles, article],
+    })),
 }));
 
 export const useUserSession = create<UserSessionStore>((set) => ({
