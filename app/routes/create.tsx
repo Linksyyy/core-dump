@@ -14,7 +14,8 @@ type DeferredRange = {
   end: number;
 };
 
-function getDeferredRange(lines: string[], activeLine: number): DeferredRange | null {
+function getDeferredRanges(lines: string[]): DeferredRange[] {
+  const ranges: DeferredRange[] = [];
   let start = -1;
   let delimiter = "";
 
@@ -38,17 +39,29 @@ function getDeferredRange(lines: string[], activeLine: number): DeferredRange | 
       (delimiter === "\\[" && trimmedLine === "\\]");
 
     if (closesBlock) {
-      if (activeLine >= start && activeLine <= index) {
-        return { start, end: index };
-      }
+      ranges.push({ start, end: index });
       start = -1;
       delimiter = "";
     }
   }
 
-  return start !== -1 && activeLine >= start
-    ? { start, end: lines.length - 1 }
-    : null;
+  if (start !== -1) ranges.push({ start, end: lines.length - 1 });
+  return ranges;
+}
+
+function ensureTitleHeader(content: string, title: string) {
+  if (!content) return "# ";
+  const firstLine = content.split("\n")[0] ?? "";
+  if (firstLine.trimStart().startsWith("# ")) return content;
+  return `# ${title}\n${content}`;
+}
+
+function getTitleFromContent(content: string) {
+  return (content.split("\n")[0] ?? "").replace(/^#\s+/, "").trim();
+}
+
+function removeTrailingEmptyLines(content: string) {
+  return content.replace(/\n+$/, "");
 }
 
 export async function loader({
@@ -70,21 +83,27 @@ export async function loader({
   const articleResponse = await fetch(
     `${API_URL}/articles/${params.articleSlug}`,
   );
-  if (!articleResponse.ok) throw new Response("Article not found", { status: 404 });
+  if (!articleResponse.ok)
+    throw new Response("Article not found", { status: 404 });
 
   return { article: await articleResponse.json() };
 }
 
 export default function Create({ loaderData, params }: Route.ComponentProps) {
   const isEditing = Boolean(params.articleSlug);
-  const [content, setContent] = useState(loaderData?.article?.content ?? "");
-  const [title, setTitle] = useState(loaderData?.article?.title ?? "");
+  const [content, setContent] = useState(() =>
+    ensureTitleHeader(
+      loaderData?.article?.content ?? "",
+      loaderData?.article?.title ?? "",
+    ),
+  );
   const [description, setDescription] = useState(
     loaderData?.article?.description ?? "",
   );
   const [activeLine, setActiveLine] = useState(0);
   const [allSelected, setAllSelected] = useState(false);
   const [rawMode, setRawMode] = useState(false);
+  const [formError, setFormError] = useState("");
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const selectAllRef = useRef(false);
   const navigate = useNavigate();
@@ -92,23 +111,16 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
   const articles = useArticles();
   const lines = content.split("\n");
   const currentLine = lines[activeLine] ?? "";
-  const deferredRange = getDeferredRange(lines, activeLine);
-  const beforeEnd = deferredRange?.start ?? activeLine;
-  const afterStart = deferredRange ? deferredRange.end + 1 : activeLine + 1;
-  const before = lines.slice(0, beforeEnd).join("\n");
-  const deferredBefore = deferredRange
-    ? lines.slice(deferredRange.start, activeLine).join("\n")
-    : "";
-  const deferredAfter = deferredRange
-    ? lines.slice(activeLine + 1, deferredRange.end + 1).join("\n")
-    : "";
-  const after = lines.slice(afterStart).join("\n");
+  const deferredRanges = getDeferredRanges(lines);
 
   useEffect(() => {
     editorRef.current?.focus();
   }, [activeLine]);
 
   function updateCurrentLine(value: string) {
+    if (activeLine === 0 && !value.startsWith("# ")) {
+      value = `# ${value.replace(/^#+\s*/, "")}`;
+    }
     setAllSelected(false);
     const nextLines = [...lines];
     nextLines[activeLine] = value;
@@ -139,7 +151,10 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
       return;
     }
 
-    if (selectAllRef.current && (event.key === "Backspace" || event.key === "Delete")) {
+    if (
+      selectAllRef.current &&
+      (event.key === "Backspace" || event.key === "Delete")
+    ) {
       event.preventDefault();
       selectAllRef.current = false;
       setAllSelected(false);
@@ -165,7 +180,12 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
     if (event.key === "Enter") {
       event.preventDefault();
       const nextLines = [...lines];
-      nextLines.splice(activeLine, 1, currentLine.slice(0, cursor), currentLine.slice(cursor));
+      nextLines.splice(
+        activeLine,
+        1,
+        currentLine.slice(0, cursor),
+        currentLine.slice(cursor),
+      );
       setContent(nextLines.join("\n"));
       moveToLine(activeLine + 1);
       return;
@@ -181,11 +201,7 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
       return;
     }
 
-    if (
-      event.key === "ArrowUp" &&
-      cursor === 0 &&
-      activeLine > 0
-    ) {
+    if (event.key === "ArrowUp" && cursor === 0 && activeLine > 0) {
       event.preventDefault();
       moveToLine(activeLine - 1, lines[activeLine - 1].length);
     }
@@ -201,6 +217,21 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
   }
 
   async function handleSubmit() {
+    const normalizedContent = removeTrailingEmptyLines(content);
+    const title = getTitleFromContent(normalizedContent);
+    const body = normalizedContent.split("\n").slice(1).join("\n").trim();
+    if (!title) {
+      setFormError("The first line must be a non-empty # title.");
+      setActiveLine(0);
+      return;
+    }
+    if (!body) {
+      setFormError("Add content below the title before publishing.");
+      setActiveLine(Math.min(1, lines.length - 1));
+      return;
+    }
+
+    setFormError("");
     const res = await fetch(
       isEditing ? `/api/articles/${params.articleSlug}` : "/api/articles",
       {
@@ -209,7 +240,7 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
         body: JSON.stringify({
           title,
           description,
-          content,
+          content: normalizedContent,
         }),
       },
     );
@@ -226,9 +257,9 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
           `/${new Date(digested.article.date).toLocaleDateString("pt-BR")}/${digested.article.slug}`,
         );
       } else {
-        setTitle("");
         setDescription("");
-        setContent("");
+        setContent("# ");
+        setActiveLine(0);
         articles.setArticles([...articles.articles, digested.article]);
       }
     }
@@ -257,73 +288,93 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
             allSelected ? "bg-acid/10" : ""
           }`}
         >
-          {before && (
-            <MathJaxContent
-              className={`Article w-full px-4 pt-4 ${
-                allSelected ? "bg-acid/20" : ""
-              }`}
-              html={marked.parse(before, { async: false, breaks: true })}
-            />
-          )}
-          {deferredBefore && (
-            <pre
-              className={`whitespace-pre-wrap px-4 font-mono text-ivory ${
-                allSelected ? "bg-acid/20" : ""
-              }`}
-            >
-              {deferredBefore}
-            </pre>
-          )}
-          <textarea
-            ref={editorRef}
-            placeholder="Escreva aqui..."
-            required
-            rows={1}
-            value={currentLine}
-            onChange={(e) => updateCurrentLine(e.target.value)}
-            onInput={(e) => {
-              if (!selectAllRef.current) return;
-              selectAllRef.current = false;
-              setAllSelected(false);
-              setContent(e.currentTarget.value);
-              setActiveLine(0);
-            }}
-            onCopy={(event) => {
-              if (!selectAllRef.current) return;
-              event.preventDefault();
-              void navigator.clipboard.writeText(content);
-            }}
-            onCut={(event) => {
-              if (!selectAllRef.current) return;
-              event.preventDefault();
-              void navigator.clipboard.writeText(content);
-              selectAllRef.current = false;
-              setAllSelected(false);
-              setContent("");
-              setActiveLine(0);
-            }}
-            onKeyDown={handleEditorKeyDown}
-            className={`block min-h-8 w-full resize-none bg-transparent text-ivory caret-acid placeholder:text-muted outline-none wrap-break-word px-4 py-1 font-serif text-lg selection:bg-acid selection:text-void ${
-              allSelected ? "bg-acid/20 text-void" : ""
-            }`}
-          />
-          {deferredAfter && (
-            <pre
-              className={`whitespace-pre-wrap px-4 pb-4 font-mono text-ivory ${
-                allSelected ? "bg-acid/20" : ""
-              }`}
-            >
-              {deferredAfter}
-            </pre>
-          )}
-          {after && (
-            <MathJaxContent
-              className={`Article w-full px-4 pb-4 ${
-                allSelected ? "bg-acid/20" : ""
-              }`}
-              html={marked.parse(after, { async: false, breaks: true })}
-            />
-          )}
+          {lines.map((line, index) => {
+            const deferredBlock = deferredRanges.find(
+              (range) => range.start === index,
+            );
+            const insideDeferredBlock = deferredRanges.some(
+              (range) => index > range.start && index <= range.end,
+            );
+
+            if (index === activeLine) {
+              return (
+                <textarea
+                  key={index}
+                  ref={editorRef}
+                  placeholder="Escreva aqui..."
+                  rows={1}
+                  value={currentLine}
+                  onChange={(e) => updateCurrentLine(e.target.value)}
+                  onInput={(e) => {
+                    if (!selectAllRef.current) return;
+                    selectAllRef.current = false;
+                    setAllSelected(false);
+                    setContent(e.currentTarget.value);
+                    setActiveLine(0);
+                  }}
+                  onCopy={(event) => {
+                    if (!selectAllRef.current) return;
+                    event.preventDefault();
+                    void navigator.clipboard.writeText(content);
+                  }}
+                  onCut={(event) => {
+                    if (!selectAllRef.current) return;
+                    event.preventDefault();
+                    void navigator.clipboard.writeText(content);
+                    selectAllRef.current = false;
+                    setAllSelected(false);
+                    setContent("");
+                    setActiveLine(0);
+                  }}
+                  onKeyDown={handleEditorKeyDown}
+                  className={`block min-h-8 w-full resize-none bg-transparent text-ivory caret-acid placeholder:text-muted outline-none wrap-break-word px-4 py-1 font-serif text-lg selection:bg-acid selection:text-void ${
+                    allSelected ? "bg-acid/20 text-void" : ""
+                  }`}
+                />
+              );
+            }
+
+            if (insideDeferredBlock) return null;
+
+            if (
+              deferredBlock &&
+              (activeLine < deferredBlock.start ||
+                activeLine > deferredBlock.end)
+            ) {
+              return (
+                <pre
+                  key={index}
+                  onClick={() => moveToLine(index)}
+                  className={`cursor-text whitespace-pre-wrap px-4 font-mono text-ivory ${
+                    allSelected ? "bg-acid/20" : ""
+                  }`}
+                >
+                  {lines
+                    .slice(deferredBlock.start, deferredBlock.end + 1)
+                    .join("\n")}
+                </pre>
+              );
+            }
+
+            return (
+              <div
+                key={index}
+                onClick={() => moveToLine(index)}
+                className={`min-h-8 cursor-text px-4 ${
+                  allSelected ? "bg-acid/20" : ""
+                }`}
+              >
+                <MathJaxContent
+                  className="Article w-full"
+                  html={
+                    line
+                      ? marked.parse(line, { async: false, breaks: true })
+                      : "<br />"
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
       )}
       <hr className="border-border mb-50" />
@@ -349,20 +400,17 @@ export default function Create({ loaderData, params }: Route.ComponentProps) {
           <input
             type="text"
             required
-            placeholder="Insira o título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="bg-surface px-3 py-1 rounded-3xl outline-none border border-border text-ivory placeholder:text-muted focus:border-electric focus:bg-surface"
-          />
-          <input
-            type="text"
-            required
-            placeholder="Insira a descrição"
+            placeholder="Insert description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="bg-surface px-3 py-1 rounded-3xl outline-none border border-border text-ivory placeholder:text-muted focus:border-electric focus:bg-surface"
           />
         </div>
+        {formError && (
+          <p className="absolute -top-8 left-4 font-mono text-xs text-scarlet">
+            {formError}
+          </p>
+        )}
         <div className="flex gap-10 w-full justify-end">
           <button
             onClick={async () => {
