@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import type { Route } from "../+types/root";
+import type { Route } from "./+types/create";
 import { marked } from "marked";
 import { MdOutlineDone } from "react-icons/md";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useArticles } from "~/globalContext";
 import MathJaxContent from "~/Components/MathJaxContent";
+import { useNavigate } from "react-router";
 
 const API_URL = process.env.API_URL;
 
@@ -50,27 +51,43 @@ function getDeferredRange(lines: string[], activeLine: number): DeferredRange | 
     : null;
 }
 
-export async function loader({ request: { headers } }: Route.LoaderArgs) {
+export async function loader({
+  request: { headers },
+  params,
+}: Route.LoaderArgs) {
   const Cookie = headers.get("Cookie")!;
-  const response = await fetch(`${API_URL}/auth`, {
+  const authResponse = await fetch(`${API_URL}/auth`, {
     headers: {
       "Content-Type": "application/json",
       Cookie,
     },
   });
-  const digested = await response.json();
-  if (!response.ok || !digested.isAdmin) throw 42; // this will block acess to route, 42 dont mean nothing, i just need throw something
+  const auth = await authResponse.json();
+  if (!authResponse.ok || !auth.isAdmin) throw 42;
+
+  if (!params.articleSlug) return { article: null };
+
+  const articleResponse = await fetch(
+    `${API_URL}/articles/${params.articleSlug}`,
+  );
+  if (!articleResponse.ok) throw new Response("Article not found", { status: 404 });
+
+  return { article: await articleResponse.json() };
 }
 
-export default function Create() {
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+export default function Create({ loaderData, params }: Route.ComponentProps) {
+  const isEditing = Boolean(params.articleSlug);
+  const [content, setContent] = useState(loaderData?.article?.content ?? "");
+  const [title, setTitle] = useState(loaderData?.article?.title ?? "");
+  const [description, setDescription] = useState(
+    loaderData?.article?.description ?? "",
+  );
   const [activeLine, setActiveLine] = useState(0);
   const [allSelected, setAllSelected] = useState(false);
   const [rawMode, setRawMode] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const selectAllRef = useRef(false);
+  const navigate = useNavigate();
 
   const articles = useArticles();
   const lines = content.split("\n");
@@ -184,23 +201,36 @@ export default function Create() {
   }
 
   async function handleSubmit() {
-    const res = await fetch("/api/articles", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title,
-        description,
-        content,
-      }),
-    });
+    const res = await fetch(
+      isEditing ? `/api/articles/${params.articleSlug}` : "/api/articles",
+      {
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description,
+          content,
+        }),
+      },
+    );
     const digested = await res.json();
 
     if (res.ok) {
-      setTitle("");
-      setDescription("");
-      setContent("");
-
-      articles.setArticles([...articles.articles, digested.article]);
+      if (isEditing) {
+        articles.setArticles(
+          articles.articles.map((article) =>
+            article.slug === params.articleSlug ? digested.article : article,
+          ),
+        );
+        navigate(
+          `/${new Date(digested.article.date).toLocaleDateString("pt-BR")}/${digested.article.slug}`,
+        );
+      } else {
+        setTitle("");
+        setDescription("");
+        setContent("");
+        articles.setArticles([...articles.articles, digested.article]);
+      }
     }
   }
 

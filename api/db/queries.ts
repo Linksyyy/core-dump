@@ -39,6 +39,21 @@ export async function createArticle(
   return article;
 }
 
+export async function updateArticle(
+  slug: string,
+  title: string,
+  description: string,
+  content: string
+) {
+  const [article] = await db
+    .update(schemas.articlesTable)
+    .set({ title, description, content })
+    .where(eq(schemas.articlesTable.slug, slug))
+    .returning();
+
+  return article;
+}
+
 export async function getUserByUsername(username: string) {
   return await db
     .select()

@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 
 // THESE ROUTES >>DONT<< HAVE PROTECTION, DONT PUT IT ON PROD
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT ?? 3000);
 const saltRounds = 10;
 
 new Elysia()
@@ -73,6 +73,43 @@ new Elysia()
       } catch (e) {
         return status(500, { message: "Something is wrong here" });
       }
+    },
+    {
+      body: t.Object({
+        title: t.String(),
+        description: t.String(),
+        content: t.String(),
+      }),
+    }
+  )
+  .put(
+    "/articles/:slug",
+    async ({ jwt, status, cookie: { auth }, params: { slug }, body }) => {
+      const jwtPayload = await jwt.verify(auth.value as string);
+
+      if (!jwtPayload)
+        return status(401, { message: "Need to be logged in" });
+      if (!jwtPayload.isAdmin)
+        return status(403, { message: "Need to be admin to edit an article" });
+
+      const { title, description, content } = body;
+      if (!title.trim() || !description.trim() || !content.trim())
+        return status(400, {
+          message:
+            "Parameters 'title', 'description' and 'content' must be defined",
+        });
+
+      const article = await db.updateArticle(
+        slug,
+        title.trim(),
+        description.trim(),
+        content.trim()
+      );
+
+      if (!article) return status(404, { message: "Article not found" });
+
+      const { id, ...leftover } = article;
+      return { article: leftover };
     },
     {
       body: t.Object({
